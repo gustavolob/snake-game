@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Tiny5&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-flow: column;
+            background-color: #283618;
+        }
+
+        h1 {
+            color: #f2e8cf;
+            font-family: 'Tiny5', monospace;
+            font-size: 2.2em;
+        }
+
+        #scoreboard {
+            width: 300px;
+            display: flex;
+            justify-content: space-between;
+
+            padding: 10px 0;
+        }
+
+        #scoreboard p {
+            font-family: 'Tiny5', monospace;
+            font-size: 1.6em;
+        }
+
+        #scoreboard div {
+            display: flex;
+        }
+
+        #highscore p {
+            padding-left: 10px;
+        }
+
+        canvas {
+            border: 5px solid #f2e8cf;
+            border-radius: 10px;
+        }
+
+    </style>
+   
+</head>
+
+<body>
+    <h1>The Snake Game!</h1>
+    <div id="scoreboard">
+        <p id="score">0</p>
+        <div id="highscore">
+            <p>HIGH:</p>
+            <p id="highcount">0</p>
+        </div>
+    </div>
+    <canvas id="gameCanvas" width="300" height="300">
+</body>
+
+<script src="script.js"></script>
+</html>
