@@ -1,3 +1,5 @@
+"use strict";
+
 let snake = [{ x: 150, y: 150 }, { x: 140, y: 150 }, { x: 130, y: 150 }, { x: 120, y: 150 }, { x: 110, y: 150 },];
 
 // Horizontal velocity
@@ -5,16 +7,67 @@ let dx = 10;
 // Vertical velocity
 let dy = 0;
 
+let foodX;
+let foodY;
+
 let score = 0;
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+
+function main() {  
+    setTimeout(function onTick() {
+    if (didGameEnd()){
+        if (score > document.getElementById('highcount').innerHTML){
+            document.getElementById('highcount').innerHTML = score;
+        }
+        ctx.font = "2.2em Tiny5";
+        ctx.textAlign = "center";
+        ctx.fillText("Game Over", 150, 140);
+
+        ctx.font = "1em Cultive Mono";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "black";
+        ctx.fillText("press space to restart", 150, 160);
+
+        return;
+    }
+    clearCanvas();
+    drawFood();
+    advanceSnake();
+    drawSnake();
+    main();  }, 100);
+}
 
 function clearCanvas() {  
     ctx.fillStyle = "#606c38";  
     //ctx.strokeStyle = "black";
     ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);  ctx.strokeRect(0, 0, gameCanvas.width, gameCanvas.height);
 }
+
+function drawFood() { ctx.fillStyle = '#bc4749';
+    ctx.strokeStyle = 'darkred';
+    ctx.fillRect(foodX, foodY, 10, 10);
+    ctx.strokeRect(foodX, foodY, 10, 10);
+};
+
+function randomTen(min, max) {
+    return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+}
+
+function createFood() {  
+    foodX = randomTen(0, gameCanvas.width - 10);
+    foodY = randomTen(0, gameCanvas.height - 10);
+
+    snake.forEach(function isFoodOnSnake(part) {
+    const foodIsOnSnake = part.x == foodX && part.y == foodY;
+    if (foodIsOnSnake) {
+        createFood();
+        }
+    }); 
+}
+
+function drawSnake() { snake.forEach(drawSnakePart); }
 
 function drawSnakePart(snakePart) {
     ctx.fillStyle = 'lightgreen'; 
@@ -24,6 +77,23 @@ function drawSnakePart(snakePart) {
 }
 
 let isDirectionChanging = false
+
+function advanceSnake() {  
+
+    isDirectionChanging = false
+
+    const head = {x: snake[0].x + dx, y: snake[0].y + dy};   
+    snake.unshift(head);
+    const didEatFood = snake[0].x === foodX && snake[0].y === foodY;
+    if (didEatFood) {
+        createFood();
+        score += 10;    
+        document.getElementById('score').innerHTML = score;
+    }else{ 
+        snake.pop();  
+    }   
+
+}
 
 document.addEventListener("keydown", changeDirection);
 
@@ -112,85 +182,5 @@ function didGameEnd() {
     return hitLeftWall || hitRightWall || hitToptWall || hitBottomWall;
 }
 
-function advanceSnake() {  
-
-    isDirectionChanging = false
-
-    const head = {x: snake[0].x + dx, y: snake[0].y + dy};   
-    snake.unshift(head);
-    const didEatFood = snake[0].x === foodX && snake[0].y === foodY;
-    if (didEatFood) {
-        createFood();
-        score += 10;    
-        document.getElementById('score').innerHTML = score;
-    }else{ 
-        snake.pop();  
-    }   
-
-}
-
-function drawSnake() { snake.forEach(drawSnakePart); }
-
-//drawSnake();
-//drawFood(); 
-function main() {  
-    setTimeout(function onTick() {
-    if (didGameEnd()){
-        if (score > document.getElementById('highcount').innerHTML){
-            document.getElementById('highcount').innerHTML = score;
-        }
-        ctx.font = "2.2em Tiny5";
-        ctx.textAlign = "center";
-        ctx.fillText("Game Over", 150, 140);
-
-        ctx.font = "1em Cultive Mono";
-        ctx.textAlign = "center";
-        ctx.fillStyle = "black";
-        ctx.fillText("press space to restart", 150, 160);
-
-        return;
-    }
-    clearCanvas(); 
-    drawFood();
-    advanceSnake();
-    drawSnake();
-    main();  }, 100);
-}
-
 createFood();
 main();
-
-
-
-function drawFood() { ctx.fillStyle = '#bc4749';
-    ctx.strokeStyle = 'darkred';
-    ctx.fillRect(foodX, foodY, 10, 10);
-    ctx.strokeRect(foodX, foodY, 10, 10);
-};
-
-
-function randomTen(min, max) {
-    return Math.round((Math.random() * (max-min) + min) / 10) * 10;
-}
-
-
-
-function createFood() {  
-    foodX = randomTen(0, gameCanvas.width - 10);  foodY = randomTen(0, gameCanvas.height - 10);
-
-    snake.forEach(function isFoodOnSnake(part) {
-    const foodIsOnSnake = part.x == foodX && part.y == foodY;
-    if (foodIsOnSnake) {
-        createFood();
-        }
-    }); 
-}
-
-
-
-
-
-
-
-
-
